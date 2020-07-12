@@ -27,11 +27,12 @@ case class ReplicatedChain(
 
     val index = divergedIndex(candidateA, candidateB, math.min(candidateA.length, candidateB.length))
     if (index.isDefined) {
-      val i           = index.get
-      val (same, a)   = candidateA.splitAt(i)
-      val (_, b)      = candidateB.splitAt(i)
-      var iA          = a.length - 1
-      var iB          = b.length - 1
+      val i         = index.get
+      val (same, a) = candidateA.splitAt(i)
+      val (_, b)    = candidateB.splitAt(i)
+      var iA        = a.length - 1
+      var iB        = b.length - 1
+
       var mergeResult = Vector.fill[Block](a.length + b.length)(null)
       var limit       = mergeResult.length
       while (limit > 0) {
