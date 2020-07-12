@@ -8,29 +8,30 @@ sbt "runMain LocalRunner"
 
 ```
 
+### Block chain
 
-### Typed actors
-https://github.com/hseeberger/welcome-akka-typed/blob/master/src/main/scala/rocks/heikoseeberger/wat/typed/Transfer.scala
-https://doc.akka.io/docs/akka/current/typed/routers.html
-https://doc.akka.io/docs/akka/current/typed/distributed-data.html
-https://github.com/johanandren/akka-typed-samples.git
-https://github.com/hseeberger/whirlwind-tour-akka.git
+https://leaks.wanari.com/2018/10/23/blockchain-akka-tutorial/
+
+https://medium.freecodecamp.org/how-to-build-a-simple-actor-based-blockchain-aac1e996c177
+
+https://bitcoin.stackexchange.com/questions/23099/what-does-the-mining-difficulty-number-really-mean/35807#35807
+
+https://github.com/TeamWanari/scala-coin
 
 
 ### RocksDB
+
 https://github.com/facebook/rocksdb/wiki/RocksJava-Basics
+
 https://github.com/facebook/rocksdb/blob/master/java/samples/src/main/java/RocksDBColumnFamilySample.java
+
 https://github.com/facebook/rocksdb/blob/master/java/samples/src/main/java/RocksDBSample.java
+
 https://www.cockroachlabs.com/blog/consistency-model/
+
 https://www.cockroachlabs.com/blog/cockroachdb-on-rocksd/
+
 https://www.cockroachlabs.com/blog/sql-in-cockroachdb-mapping-table-data-to-key-value-storage/
-
-
-### Info
-https://leaks.wanari.com/2018/10/23/blockchain-akka-tutorial/
-https://medium.freecodecamp.org/how-to-build-a-simple-actor-based-blockchain-aac1e996c177
-https://bitcoin.stackexchange.com/questions/23099/what-does-the-mining-difficulty-number-really-mean/35807#35807
-https://github.com/TeamWanari/scala-coin
 
 
 ### Videos
