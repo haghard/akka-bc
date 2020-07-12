@@ -36,7 +36,7 @@ object Helpers {
     sb.toString
   }
 
-  def transaction() =
+  def jsonTransaction() =
     JsObject(
       "from"   → JsString(genName),
       "to"     → JsString(genName),
@@ -44,8 +44,8 @@ object Helpers {
       "sign"   → JsString(ThreadLocalRandom.current.nextLong.toString)
     )
 
-  def example: Val = {
-    val kvs = ObjVal(
+  def pbTransaction: Val =
+    /*val kvs = ObjVal(
       Seq(
         KeyVal("keyLong", Some(Val(Val.Union.LongT(3L)))),
         KeyVal("keyStr", Some(Val(Val.Union.StringT("hello"))))
@@ -63,7 +63,19 @@ object Helpers {
           )
         )
       )
+    )*/
+
+    Val(
+      Val.Union.ObjectT(
+        ObjVal(
+          Vector(
+            KeyVal("from", Some(Val(Val.Union.StringT(genName)))),
+            KeyVal("to", Some(Val(Val.Union.StringT(genName)))),
+            KeyVal("amount", Some(Val(Val.Union.DoubleT(ThreadLocalRandom.current.nextDouble())))),
+            KeyVal("sign", Some(Val(Val.Union.StringT(ThreadLocalRandom.current.nextLong.toString))))
+          )
+        )
+      )
     )
-  }
 
 }

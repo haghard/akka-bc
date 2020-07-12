@@ -76,13 +76,13 @@ package object bchain {
     }
   }
 
-  case class Block(seqNum: Long, prevHash: String, data: JsObject, difficulty: Double, ts: Long, nonce: String = "1") {
+  case class Block(seqNum: Long, prevHash: String, data: JsObject, ts: Long, nonce: String = "1") {
+
     def hash: String = Crypto.sha256Hex(toString)
 
     s"""
       |$seqNum
       |$prevHash
-      |$difficulty
       |$ts
       |$nonce
       |""".stripMargin
@@ -93,44 +93,9 @@ package object bchain {
 
   object Block extends DefaultJsonProtocol {
     implicit val formatter: RootJsonFormat[Block] =
-      jsonFormat6(Block.apply)
+      jsonFormat5(Block.apply)
 
-    val genesis = Block(0, "", JsObject(), 1, 0)
-
-    def mine0(block: Block): Block = {
-
-      /*def logHashRate(cycle: Int, index: Long, diff: Double) = {
-        val now = System.currentTimeMillis()
-        val elasped = now - lastLog
-        if(elasped>5000) {
-          val hashRate = cycle/((now - start)/1000.0)/1000.0
-          println(s"spd: $hashRate kH/s | idx: $index | diff: $diff")
-          lastLog = now
-        }
-      }*/
-
-      @tailrec
-      def guess(block: Block): Block = {
-        val b = block.copy(nonce = (BigInt(block.nonce, 16) + BigInteger.ONE).toString(16))
-        if (Difficulty.checkHash(b.hash, b.difficulty)) b else guess(b)
-      }
-
-      val start = System.currentTimeMillis()
-      val r     = guess(block)
-      println("latency: " + (System.currentTimeMillis() - start))
-      r
-
-      /*val start = System.currentTimeMillis()
-
-      def guess(limit: BigInt, b: Block): Block =
-        if (Difficulty.higherThen(b.hash, limit)) b
-        else guess(limit, b.copy(nonce = (BigInt(b.nonce, 16) + BigInteger.ONE).toString(16)))
-
-      val limit = (Difficulty.tMax / b.difficulty).toBigInt
-      val r     = guess(limit, b)
-      println("latency: " + (System.currentTimeMillis() - start))
-      r*/
-    }
+    val genesis = Block(0L, "", JsObject(), 0L)
 
     /*
      * POW

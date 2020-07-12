@@ -15,7 +15,7 @@ option (scalapb.options) = {
 message Val {
   oneof union {
     int64 long_t = 1;
-    double float_t = 2;
+    double double_t = 2;
     string string_t = 3;
     ArrVal array_t = 4;
     ObjVal object_t = 5;
