@@ -3,12 +3,15 @@ package bchain.crdt
 import scala.annotation.tailrec
 import scala.collection.immutable.SortedMap
 
-/*
-    Version vectors have 3 types of relationships:
- * A >= B - A descends B
- * A > B  - A dominates B example [{a:2}, {b:3}] dominates [{a:1}, {b:3}]
- * Concurrent A <> B  [{a:1}, {b:0}] <> [{a:0}, {b:1}]
- */
+/**
+  *
+  * Taken from https://github.com/mboogerd/ccrdt/blob/c636848044283cd5ad193b63fb5be9f56f84ed7a/src/main/scala/com/github/mboogerd/ccrdt/crdt/VersionVector.scala#L26
+  *
+  * Version vectors have 3 types of relationships:
+  * A >= B - A descends B
+  * A > B  - A dominates B example [{a:2}, {b:3}] dominates [{a:1}, {b:3}]
+  * Concurrent A <> B  [{a:1}, {b:0}] <> [{a:0}, {b:1}]
+  */
 object VersionVector {
 
   sealed trait Ordering
@@ -79,7 +82,6 @@ trait VersionVectorLike[T] {
   protected def size: Int
 }
 
-// Taken from "Merlijn Boogerd" %%  "computational-crdts" % "1.0"
 case class VersionVector[T: scala.Ordering](elems: SortedMap[T, Long]) extends VersionVectorLike[T] {
 
   import VersionVector._
@@ -135,43 +137,45 @@ case class VersionVector[T: scala.Ordering](elems: SortedMap[T, Long]) extends V
 
     @tailrec
     def compare(i1: Seq[(T, Long)], i2: Seq[(T, Long)], currentOrder: Ordering): Ordering = {
-      if ((requestedOrder ne FullOrder) && (currentOrder ne Same) && (currentOrder ne requestedOrder)) currentOrder
-
-      (i1, i2) match {
-        case (h1 +: t1, h2 +: t2) ⇒
-          // compare the nodes
-          val nc = ord.compare(h1._1, h2._1)
-          if (nc == 0)
+      if ((requestedOrder ne FullOrder) && (currentOrder ne Same) && (currentOrder ne requestedOrder))
+        currentOrder
+      else {
+        (i1, i2) match {
+          case (h1 +: t1, h2 +: t2) ⇒
+            // compare the nodes
+            val nc = ord.compare(h1._1, h2._1)
+            if (nc == 0)
             // both nodes exist compare the timestamps
             // same timestamp so just continue with the next nodes
             if (h1._2 == h2._2) compare(t1, t2, currentOrder)
             else if (h1._2 < h2._2)
-              // t1 is less than t2, so i1 can only be Before
+            // t1 is less than t2, so i1 can only be Before
               if (currentOrder eq After) Concurrent
               else compare(t1, t2, Before)
             else
             // t2 is less than t1, so i1 can only be After
-            if (currentOrder eq Before) Concurrent
-            else compare(t1, t2, After)
-          else if (nc < 0)
+              if (currentOrder eq Before) Concurrent
+              else compare(t1, t2, After)
+            else if (nc < 0)
             // this node only exists in i1 so i1 can only be After
-            if (currentOrder eq Before) Concurrent
-            else compare(t1, h2 +: t2, After)
-          else
-          // this node only exists in i2 so i1 can only be Before
-          if (currentOrder eq After) Concurrent
-          else compare(h1 +: t1, t2, Before)
+              if (currentOrder eq Before) Concurrent
+              else compare(t1, h2 +: t2, After)
+            else
+            // this node only exists in i2 so i1 can only be Before
+              if (currentOrder eq After) Concurrent
+              else compare(h1 +: t1, t2, Before)
 
-        case (h1 +: t1, _) ⇒
-          // i2 is empty but i1 is not, so i1 can only be After
-          if (currentOrder eq Before) Concurrent else After
+          case (h1 +: t1, _) ⇒
+            // i2 is empty but i1 is not, so i1 can only be After
+            if (currentOrder eq Before) Concurrent else After
 
-        case (_, h2 +: t2) ⇒
-          // i1 is empty but i2 is not, so i1 can only be Before
-          if (currentOrder eq After) Concurrent else Before
+          case (_, h2 +: t2) ⇒
+            // i1 is empty but i2 is not, so i1 can only be Before
+            if (currentOrder eq After) Concurrent else Before
 
-        case _ ⇒
-          currentOrder
+          case _ ⇒
+            currentOrder
+        }
       }
     }
 
