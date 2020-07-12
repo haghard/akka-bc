@@ -1,2 +1,7 @@
 *.class
 *.log
+/.idea/
+.idea/
+target/
+rocks-db/
+h2-db/

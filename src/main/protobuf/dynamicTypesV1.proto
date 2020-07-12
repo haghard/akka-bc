@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+import "scalapb/scalapb.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+package bchain.domain.v1;
+
+option (scalapb.options) = {
+    single_file: true
+    flat_package: true
+};
+
+//https://rockset.com/blog/ivalue-efficient-representation-of-dynamic-types-in-cplusplus/
+message Val {
+  oneof union {
+    int64 long_t = 1;
+    double float_t = 2;
+    string string_t = 3;
+    ArrVal array_t = 4;
+    ObjVal object_t = 5;
+  }
+}
+
+message ArrVal {
+  repeated Val values = 1;
+}
+
+message ObjVal {
+  repeated KeyVal kvs = 1;
+}
+
+message KeyVal {
+  string key = 1;
+  Val value = 2;
+}
