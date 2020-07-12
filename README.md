@@ -57,9 +57,3 @@ https://www.youtube.com/watch?v=S9JGmA5_unY
 Let’s All just Agree: Achieving Consensus in Blockchain-based Systems • Stefan Tilkov
 
 https://www.youtube.com/watch?v=lgHh4de_6ZI
-
-### Ideas
-
-Store bchain in RocksDB serializing json into protobuf 
-
-https://rockset.com/blog/ivalue-efficient-representation-of-dynamic-types-in-cplusplus/ 
