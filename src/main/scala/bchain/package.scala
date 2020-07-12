@@ -101,20 +101,20 @@ package object bchain {
      * POW
      * The probability of hash to start with 6 leading zeros: 1/pow(2,6)
      */
-    def mine(b: Block, leadingZeros: Int = 6): Block = {
+    def mine(b: Block, numOfLeadingZero: Int = 6): Block = {
       val start = System.currentTimeMillis()
 
-      @tailrec def guess(b: Block, prefix: String): Block =
-        if (isValid(b, prefix)) b
+      @tailrec def loop(b: Block, prefix: String, cycleNum: Long = 0L): (Block, Long) =
+        if (isValid(b, prefix)) (b, cycleNum)
         else
-          //if (ThreadLocalRandom.current().nextDouble() > 0.96) Thread.sleep(10)
-          guess(b.copy(nonce = (BigInt(b.nonce, 16) + BigInteger.ONE).toString(16)), prefix)
+          //if (ThreadLocalRandom.current().nextDouble() > 0.99) Thread.sleep(10)
+          loop(b.copy(nonce = (BigInt(b.nonce, 16) + BigInteger.ONE).toString(16)), prefix, cycleNum + 1L)
 
-      val expectedPrefix = "0" * leadingZeros
-      val r              = guess(b, expectedPrefix)
+      val expectedPrefix    = "0" * numOfLeadingZero
+      val (block, cycleNum) = loop(b, expectedPrefix)
 
-      println("latency: " + (System.currentTimeMillis() - start))
-      r
+      println(s"latency:${System.currentTimeMillis() - start} cycles:$cycleNum")
+      block
     }
 
     def isValid(b: Block, prefix: String): Boolean =
