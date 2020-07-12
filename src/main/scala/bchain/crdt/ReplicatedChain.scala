@@ -59,7 +59,7 @@ case class ReplicatedChain(
     Requires a bounded semilattice (or idempotent commutative monoid).
     Monotonic semi-lattice + merge = Least Upper Bound
 
-    We rely on commutivity to ensure that machine A merging with machine B yields the same result as machine B merging with machine A.
+    We rely on commutativity to ensure that machine A merging with machine B yields the same result as machine B merging with machine A.
     We need associativity to ensure we obtain the correct result when three or more machines are merging data.
     We need an identity element to initialise empty ReplicatedChain.
     Finally, we need idempotency, to ensure that if two machines hold the same data
