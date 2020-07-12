@@ -117,7 +117,7 @@ package object bchain {
       block
     }
 
-    def isValid(b: Block, prefix: String): Boolean =
+    private def isValid(b: Block, prefix: String): Boolean =
       b.hash.startsWith(prefix)
   }
 

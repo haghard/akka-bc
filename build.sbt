@@ -25,12 +25,12 @@ val `akka-bc` = project
 
       "io.spray" %%  "spray-json" % "1.3.5",
 
-      //to store local ReplicatedChain
+      //to store local ReplicatedChain  data
       "org.rocksdb" % "rocksdbjni" %  "6.10.2",    //Jun, 2020
       //"com.h2database"  % "h2"          % "1.4.197",
       //"com.h2database"  % "h2-mvstore"  % "1.4.197"
 
-      //for search index for bchain
+      //transactions search inside ledger
       "com.yandex.yoctodb" % "yoctodb-core"  % "0.0.19",
 
       //"org.hdrhistogram"  % "HdrHistogram" %  "2.1.10",
