@@ -70,12 +70,12 @@ case class ReplicatedChain(
       //val blocks = merge2(blockChain.chain, that.blockChain.chain)
       //ReplicatedChain(blockChain.fromBlocks(blocks), versions merge that.versions)
 
-      //the longest chain wins
+      //longest chain wins
       val winner =
-        if (blockChain.chain.size == that.blockChain.chain.size)
-          //earliest based on ts
+        if (blockChain.size == that.blockChain.size)
+          //earliest chain wins
           if (blockChain.latest.ts < that.blockChain.latest.ts) this else that
-        else if (blockChain.chain.size > that.blockChain.chain.size) this
+        else if (blockChain.size > that.blockChain.size) this
         else that
 
       ReplicatedChain(winner.blockChain, versions merge that.versions)

@@ -8,6 +8,8 @@ case class BlockChain(chain: List[Block]) {
 
   def size: Int = chain.size
 
+  def fromBlocks(chain: List[Block]): BlockChain = copy(chain)
+
   def nextEmptyBlock: Block =
     Block(latest.seqNum + 1L, latest.hash, JsObject(), System.currentTimeMillis)
 
