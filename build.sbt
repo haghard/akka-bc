@@ -2,7 +2,7 @@ import com.typesafe.sbt.SbtMultiJvm
 import com.typesafe.sbt.SbtMultiJvm.MultiJvmKeys.MultiJvm
 import sbt.CrossVersion
 
-val akkaVersion = "2.6.7"
+val akkaVersion = "2.6.8"
 
 val `akka-bc` = project
   .in(file("."))
@@ -10,7 +10,7 @@ val `akka-bc` = project
   .settings(
     name := "akka-bc",
     version := "0.0.1",
-    scalaVersion := "2.13.2",
+    scalaVersion := "2.13.3",
 
     //scalacOptions in Compile ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlog-reflective-calls", "-Xlint"),
     javacOptions in Compile ++= Seq("-Xlint:unchecked", "-Xlint:deprecation"),
@@ -34,7 +34,7 @@ val `akka-bc` = project
       "com.yandex.yoctodb" % "yoctodb-core"  % "0.0.19",
 
       //"org.hdrhistogram"  % "HdrHistogram" %  "2.1.10",
-      ("com.lihaoyi" % "ammonite" % "2.1.4" % "test").cross(CrossVersion.full),
+      ("com.lihaoyi" % "ammonite" % "2.2.0" % "test").cross(CrossVersion.full),
 
       "com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion),
 
