@@ -57,3 +57,14 @@ https://www.youtube.com/watch?v=S9JGmA5_unY
 Let’s All just Agree: Achieving Consensus in Blockchain-based Systems • Stefan Tilkov
 
 https://www.youtube.com/watch?v=lgHh4de_6ZI
+
+
+### Yoctodb
+
+https://github.com/yandex/yoctodb
+
+https://github.com/yandex/yoctodb/wiki/Design
+
+https://github.com/yandex/yoctodb/wiki/GettingStarted
+
+https://github.com/yandex/yoctodb/blob/a7263f507c6aaa1c11323fb5c49240ad7ba2f487/core/src/test/java/com/yandex/yoctodb/CompositeFileDatabaseTest.java
