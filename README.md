@@ -10,6 +10,16 @@ sbt "runMain LocalRunner"
 
 ### Block chain
 
+Classic Consensus:
+    * Safety - rely on what system tells you.
+    * Liveness - progress is guarantee.
+    * Can’t handle byzantine failure ()
+
+Blockchain 
+    * Byzantine failure tolerance
+
+
+
 https://leaks.wanari.com/2018/10/23/blockchain-akka-tutorial/
 
 https://medium.freecodecamp.org/how-to-build-a-simple-actor-based-blockchain-aac1e996c177
