@@ -1,7 +1,6 @@
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import java.util.concurrent.ThreadLocalRandom
 
 import spray.json.{DefaultJsonProtocol, JsObject, RootJsonFormat, _}
 
@@ -26,7 +25,6 @@ package object bchain {
   }
 
   //https://github.com/TeamWanari/scala-coin
-
   object Difficulty {
     ////BigDecimal(BigDecimal.decimal(math.pow(2, 224)).toBigInt, 16)
     val tMax = BigDecimal(BigInt("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16))
@@ -92,6 +90,7 @@ package object bchain {
   }
 
   object Block extends DefaultJsonProtocol {
+
     implicit val formatter: RootJsonFormat[Block] =
       jsonFormat5(Block.apply)
 
@@ -102,23 +101,27 @@ package object bchain {
      * The probability of hash to start with 6 leading zeros: 1/pow(2,6)
      */
     def mine(b: Block, numOfLeadingZero: Int = 6): Block = {
-      val start = System.currentTimeMillis()
 
-      @tailrec def loop(b: Block, prefix: String, cycleNum: Long = 0L): (Block, Long) =
-        if (isValid(b, prefix)) (b, cycleNum)
-        else
-          //if (ThreadLocalRandom.current().nextDouble() > 0.99) Thread.sleep(10)
-          loop(b.copy(nonce = (BigInt(b.nonce, 16) + BigInteger.ONE).toString(16)), prefix, cycleNum + 1L)
+      @tailrec def loop(b: Block, prefix: String, startTs: Long, iterNum: Long = 0L): (Block, Long) =
+        if (isValid(b, prefix, startTs)) (b, iterNum)
+        else {
+          //if (java.util.concurrent.ThreadLocalRandom.current().nextDouble() > 0.99) Thread.sleep(10)
+          loop(b.copy(nonce = (BigInt(b.nonce, 16) + BigInteger.ONE).toString(16)), prefix, startTs, iterNum + 1L)
+        }
 
-      val expectedPrefix    = "0" * numOfLeadingZero
-      val (block, cycleNum) = loop(b, expectedPrefix)
+      val expectedPrefix = "0" * numOfLeadingZero
 
-      println(s"latency:${System.currentTimeMillis() - start} cycles:$cycleNum")
+      val startTs       = System.currentTimeMillis()
+      val (block, iter) = loop(b, expectedPrefix, startTs)
+
+      println(s"Latency: ${(System.currentTimeMillis - startTs) / 1_000}sec. $iter cycles")
       block
     }
 
-    private def isValid(b: Block, prefix: String): Boolean =
-      b.hash.startsWith(prefix)
+    private def isValid(b: Block, prefix: String, startTs: Long): Boolean =
+      b.hash.startsWith(prefix) && ((System
+        .currentTimeMillis() - startTs) > 10_000) //keep running running it it takes less then 10 sec
+
   }
 
   final case class BlockChain(chain: List[Block]) {
@@ -140,7 +143,5 @@ package object bchain {
 
     private def isValid(newBlock: Block): Boolean =
       chain.head.seqNum == newBlock.seqNum - 1 && chain.head.hash == newBlock.prevHash
-
   }
-
 }

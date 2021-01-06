@@ -1,6 +1,7 @@
 import bchain.{Block, BlockChain}
 import Helpers._
 
+//runMain LocalRunner
 object LocalRunner extends App {
 
   val blockChain = BlockChain(Block.genesis :: Nil)

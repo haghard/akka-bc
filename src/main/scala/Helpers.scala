@@ -2,15 +2,13 @@ import java.util.concurrent.ThreadLocalRandom
 
 import akka.actor.ActorSystem
 import akka.cluster.{Cluster, MemberStatus}
-import bchain.domain.v1.{ArrVal, KeyVal, ObjVal, Val}
 import spray.json.{JsNumber, JsObject, JsString}
 
 import scala.concurrent.duration.FiniteDuration
 
 object Helpers {
 
-  /**
-    * Block the calling thread until all the given nodes have reached Up and that is seen from all nodes.
+  /** Block the calling thread until all the given nodes have reached Up and that is seen from all nodes.
     * In a real system (tm) you should have no use for such a thing but instead use an actor listening for
     * cluster membership events. This is here to keep samples brief and easy to follow.
     */
@@ -20,8 +18,7 @@ object Helpers {
       waitForAllNodesUp(nodes: _*)
     } else ()
 
-  /**
-    * Block the calling thread for the given time period. In real system (tm) built with
+  /** Block the calling thread for the given time period. In real system (tm) built with
     * Akka you should never have anything like this - it is just for making the samples
     * easier to follow and understand.
     */
@@ -44,6 +41,7 @@ object Helpers {
       "sign"   → JsString(ThreadLocalRandom.current.nextLong.toString)
     )
 
+  import bchain.domain.v1.{/*ArrVal,*/ KeyVal, ObjVal, Val}
   def pbTransaction: Val =
     /*val kvs = ObjVal(
       Seq(

@@ -5,7 +5,7 @@ import akka.cluster.ddata.ReplicatedData
 
 //https://www.geeksforgeeks.org/merge-two-sorted-arrays/
 //https://github.com/haghard/dr-chatter/blob/f60e3174f6f58afc824fb5c47109f7a1bdf0daff/src/main/scala/chatter/crdt/ChatTimeline.scala#L30
-case class ReplicatedChain(
+final case class ReplicatedChain(
   blockChain: BlockChain,
   versions: VersionVector[MinerNode] = VersionVector.empty[MinerNode](Implicits.nodeOrdering)
 ) extends ReplicatedData {

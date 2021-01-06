@@ -8,7 +8,7 @@ sbt "runMain LocalRunner"
 
 ```
 
-### Block chain
+### Blockchain
 
 Classic Consensus:
     * Safety - rely on what system tells you.
@@ -16,18 +16,23 @@ Classic Consensus:
     * Can’t handle byzantine failure ()
 
 Blockchain 
-    * Byzantine failure tolerance
+    * Byzantine failure tolerance (Reach the agreement in a very hostile(untrusted) env.  Keywords: untrustworthy, malicious actors)
 
-
+### Projects + info
 
 https://leaks.wanari.com/2018/10/23/blockchain-akka-tutorial/
+https://github.com/TeamWanari/scala-coin
+https://github.com/ronakkany/scalablockchain
 
 https://medium.freecodecamp.org/how-to-build-a-simple-actor-based-blockchain-aac1e996c177
-
 https://bitcoin.stackexchange.com/questions/23099/what-does-the-mining-difficulty-number-really-mean/35807#35807
 
-https://github.com/TeamWanari/scala-coin
 
+Nodes in the blockchain perform three tasks: 
+1) process transactions
+2) relay validated transactions and completed blocks to other nodes
+3) store the state and the history of the entire network ledger
+      
 
 ### RocksDB
 
@@ -51,10 +56,6 @@ Alternative Consensus Mechanisms
 
 Blockchain versus Classical Distributed Programming (ft. Maurice Herlihy)
  https://www.youtube.com/watch?v=nh-BXU7aqfU&list=PLbZ2T3O9BuvczX5j03bWMrMFzK5OAs9mZ&index=225&t=0s
- 
- 
-Reach the agreement in a very hostile(untrusted) env
-Ket words: untrustworthy, malicious actors 
 
 
 3Blue1Brown
