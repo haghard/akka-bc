@@ -1,23 +1,31 @@
 package bchain
 package crdt
 
-import akka.cluster.ddata.ReplicatedData
+//import akka.cluster.UniqueAddress
+import akka.cluster.ddata.{ReplicatedData, SelfUniqueAddress}
+
+import scala.annotation.nowarn
+//import scala.collection.immutable.TreeMap
 
 //https://www.geeksforgeeks.org/merge-two-sorted-arrays/
 //https://github.com/haghard/dr-chatter/blob/f60e3174f6f58afc824fb5c47109f7a1bdf0daff/src/main/scala/chatter/crdt/ChatTimeline.scala#L30
 final case class ReplicatedChain(
   blockChain: BlockChain,
-  versions: VersionVector[MinerNode] = VersionVector.empty[MinerNode](Implicits.nodeOrdering)
-) extends ReplicatedData {
+  //versions: VersionVector[MinerNode] = VersionVector.empty[MinerNode](Implicits.nodeOrdering)
+  versions: akka.cluster.ddata.VersionVector //= ManyVersionVector(TreeMap.empty[UniqueAddress, Long])
+) extends ReplicatedData { self ⇒
+
+  //akka.cluster.ddata.OneVersionVector(???)
+  //akka.cluster.ddata.ManyVersionVector(TreeMap.empty[UniqueAddress, Long])
 
   override type T = ReplicatedChain
 
-  def +(block: Block, node: MinerNode): ReplicatedChain = {
-    val (added, updatedChain) = blockChain + block
-    if (added) copy(updatedChain, this.versions + node)
-    else this
+  def +(block: Block, node: SelfUniqueAddress /*MinerNode*/ ): ReplicatedChain = {
+    val (added, updatedChain) = self.blockChain + block
+    if (added) copy(updatedChain, self.versions :+ node) else this
   }
 
+  @nowarn
   private def merge2(candidateA: List[Block], candidateB: List[Block]): List[Block] = {
     @scala.annotation.tailrec
     def divergedIndex(a: List[Block], b: List[Block], limit: Int, i: Int = 0): Option[Int] =
@@ -62,23 +70,22 @@ final case class ReplicatedChain(
     in a per-machine ReplicatedChain, merging them will not lead to an incorrect result.
    */
   override def merge(that: ReplicatedChain): ReplicatedChain =
-    if (versions < that.versions)
+    if (self.versions < that.versions)
       that
-    else if (versions > that.versions)
+    else if (self.versions > that.versions)
       this
-    else if (versions <> that.versions) {
+    else if (self.versions <> that.versions) {
       //val blocks = merge2(blockChain.chain, that.blockChain.chain)
       //ReplicatedChain(blockChain.fromBlocks(blocks), versions merge that.versions)
 
-      //longest chain wins
+      //The longest chain wins
       val winner =
-        if (blockChain.size == that.blockChain.size)
-          //earliest chain wins
-          if (blockChain.latest.ts < that.blockChain.latest.ts) this else that
-        else if (blockChain.size > that.blockChain.size) this
+        if (self.blockChain.size == that.blockChain.size)
+          //The youngest chain wins
+          if (self.blockChain.latest.ts < that.blockChain.latest.ts) this else that
+        else if (self.blockChain.size > that.blockChain.size) this
         else that
 
       ReplicatedChain(winner.blockChain, versions merge that.versions)
-
     } else this //  ==
 }

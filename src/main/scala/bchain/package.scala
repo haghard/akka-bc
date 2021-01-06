@@ -1,15 +1,14 @@
+import spray.json.{DefaultJsonProtocol, JsObject, RootJsonFormat, _}
+
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-
-import spray.json.{DefaultJsonProtocol, JsObject, RootJsonFormat, _}
-
 import scala.annotation.tailrec
 import scala.math.BigDecimal.RoundingMode
 
 package object bchain {
 
-  final case class MinerNode(host: String, port: Int)
+  /*final case class MinerNode(host: String, port: Int)
 
   object Implicits {
     implicit val nodeOrdering = new scala.Ordering[MinerNode] {
@@ -22,7 +21,7 @@ package object bchain {
           }
           .compare(a, b)
     }
-  }
+  }*/
 
   //https://github.com/TeamWanari/scala-coin
   object Difficulty {
@@ -90,6 +89,8 @@ package object bchain {
   }
 
   object Block extends DefaultJsonProtocol {
+    //shouldn't return faster then this
+    val lowestCap = 15_000
 
     implicit val formatter: RootJsonFormat[Block] =
       jsonFormat5(Block.apply)
@@ -114,14 +115,14 @@ package object bchain {
       val startTs       = System.currentTimeMillis()
       val (block, iter) = loop(b, expectedPrefix, startTs)
 
-      println(s"Latency: ${(System.currentTimeMillis - startTs) / 1_000}sec. $iter cycles")
+      import scala.Console.{GREEN, RESET /*, RED*/}
+      println(s"$GREEN [latency: ${(System.currentTimeMillis - startTs) / 1_000} sec, cycles: $iter]$RESET")
       block
     }
 
     private def isValid(b: Block, prefix: String, startTs: Long): Boolean =
       b.hash.startsWith(prefix) && ((System
-        .currentTimeMillis() - startTs) > 10_000) //keep running running it it takes less then 10 sec
-
+        .currentTimeMillis() - startTs) > lowestCap) //keep running running it it takes less then `lowestCap`
   }
 
   final case class BlockChain(chain: List[Block]) {
