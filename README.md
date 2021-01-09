@@ -2,12 +2,6 @@
 
 #How to run
 
-```bash
-
-sbt "runMain LocalRunner"
-
-```
-
 ### Blockchain
 
 Classic Consensus:
@@ -27,6 +21,9 @@ https://github.com/ronakkany/scalablockchain
 https://medium.freecodecamp.org/how-to-build-a-simple-actor-based-blockchain-aac1e996c177
 https://bitcoin.stackexchange.com/questions/23099/what-does-the-mining-difficulty-number-really-mean/35807#35807
 
+
+
+https://habr.com/en/post/437926/
 
 Nodes in the blockchain perform three tasks: 
 1) process transactions
@@ -79,3 +76,14 @@ https://github.com/yandex/yoctodb/wiki/Design
 https://github.com/yandex/yoctodb/wiki/GettingStarted
 
 https://github.com/yandex/yoctodb/blob/a7263f507c6aaa1c11323fb5c49240ad7ba2f487/core/src/test/java/com/yandex/yoctodb/CompositeFileDatabaseTest.java
+     
+
+
+### akka-cluster with docker
+
+https://github.com/akka/akka-sample-cluster-docker-compose-scala
+
+
+### Akka cluster visualization and management dashboard
+
+https://github.com/Headstorm/shukra

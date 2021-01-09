@@ -16,8 +16,15 @@ lazy val scalacSettings2_13 = Seq(
   )*/
 
   scalacOptions ++= Seq(
-    //"-deprecation", // Emit warning and location for usages of deprecated APIs.
-    "-unchecked",   // Enable additional warnings where generated code depends on assumptions.
+    //"-deprecation",
+    "-explaintypes",
+    "-feature",
+    "-unchecked"
+  )
+
+  /*scalacOptions ++= Seq(
+    //"-deprecation",     // Emit warning and location for usages of deprecated APIs.
+    "-unchecked",         // Enable additional warnings where generated code depends on assumptions.
     "-encoding", "UTF-8", // Specify character encoding used by source files.
     "-Ywarn-dead-code",                  // Warn when dead code is identified.
     "-Ywarn-extra-implicit",             // Warn when more than one implicit parameter section is defined.
@@ -29,7 +36,8 @@ lazy val scalacSettings2_13 = Seq(
     "-Ywarn-unused:patvars",             // Warn if a variable bound in a pattern is unused.
     "-Ywarn-unused:privates",            // Warn if a private member is unused.
     "-Ywarn-value-discard"              // Warn when non-Unit expression results are unused.
-  )
+  )*/
+
 )
 
 
@@ -52,7 +60,7 @@ val `akka-bc` = project
     //javaOptions in Universal ++= Seq("-J-Xms512M", "-J-Xmx700M", "-J-XX:MaxMetaspaceSize=600M"),
 
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-cluster-typed" % akkaVersion,
+      "com.typesafe.akka" %% "akka-cluster-typed"    % akkaVersion,
       "com.typesafe.akka" %% "akka-distributed-data" % akkaVersion,
 
       "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
@@ -65,13 +73,14 @@ val `akka-bc` = project
       //"com.h2database"  % "h2"          % "1.4.197",
       //"com.h2database"  % "h2-mvstore"  % "1.4.197"
 
-      //transactions search inside ledger
+      //transactions search inside a ledger
       "com.yandex.yoctodb" % "yoctodb-core"  % "0.0.19",
 
       //https://github.com/typelevel/algebra/blob/46722cd4aa4b01533bdd01f621c0f697a3b11040/docs/docs/main/tut/typeclasses/overview.md
       "org.typelevel" %% "algebra" % "2.1.0",
 
-      //"org.hdrhistogram"  % "HdrHistogram" %  "2.1.10",
+      "org.hdrhistogram"  % "HdrHistogram" %  "2.1.10",
+
       ("com.lihaoyi" % "ammonite" % "2.3.8" % "test").cross(CrossVersion.full),
 
       "com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion),

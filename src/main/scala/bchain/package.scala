@@ -1,6 +1,5 @@
 import spray.json.{DefaultJsonProtocol, JsObject, RootJsonFormat, _}
 
-import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import scala.annotation.tailrec
@@ -90,7 +89,7 @@ package object bchain {
 
   object Block extends DefaultJsonProtocol {
     //shouldn't return faster then this
-    val lowestCap = 15_000
+    val lowestCap = 20_000
 
     implicit val formatter: RootJsonFormat[Block] =
       jsonFormat5(Block.apply)
@@ -103,11 +102,13 @@ package object bchain {
      */
     def mine(b: Block, numOfLeadingZero: Int = 6): Block = {
 
-      @tailrec def loop(b: Block, prefix: String, startTs: Long, iterNum: Long = 0L): (Block, Long) =
-        if (isValid(b, prefix, startTs)) (b, iterNum)
+      @tailrec def loop(b: Block, stablePrefix: String, startTs: Long, iterNum: Long = 0L): (Block, Long) =
+        if (isValid(b, stablePrefix, startTs)) (b, iterNum)
         else {
           //if (java.util.concurrent.ThreadLocalRandom.current().nextDouble() > 0.99) Thread.sleep(10)
-          loop(b.copy(nonce = (BigInt(b.nonce, 16) + BigInteger.ONE).toString(16)), prefix, startTs, iterNum + 1L)
+
+          //BigInt(1)
+          loop(b.copy(nonce = (BigInt(b.nonce, 16) + BigInt(1)).toString(16)), stablePrefix, startTs, iterNum + 1L)
         }
 
       val expectedPrefix = "0" * numOfLeadingZero
@@ -120,8 +121,8 @@ package object bchain {
       block
     }
 
-    private def isValid(b: Block, prefix: String, startTs: Long): Boolean =
-      b.hash.startsWith(prefix) && ((System
+    private def isValid(b: Block, stablePrefix: String, startTs: Long): Boolean =
+      b.hash.startsWith(stablePrefix) && ((System
         .currentTimeMillis() - startTs) > lowestCap) //keep running running it it takes less then `lowestCap`
   }
 
@@ -143,6 +144,6 @@ package object bchain {
       if (isValid(block)) (true, BlockChain(block :: chain)) else (false, this)
 
     private def isValid(newBlock: Block): Boolean =
-      chain.head.seqNum == newBlock.seqNum - 1 && chain.head.hash == newBlock.prevHash
+      chain.head.seqNum == newBlock.seqNum - 1L && chain.head.hash == newBlock.prevHash
   }
 }

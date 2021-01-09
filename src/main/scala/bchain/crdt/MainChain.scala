@@ -2,14 +2,17 @@ package bchain
 package crdt
 
 //import akka.cluster.UniqueAddress
-import akka.cluster.ddata.{ReplicatedData, SelfUniqueAddress}
-
-import scala.annotation.nowarn
 //import scala.collection.immutable.TreeMap
 
-//https://www.geeksforgeeks.org/merge-two-sorted-arrays/
-//https://github.com/haghard/dr-chatter/blob/f60e3174f6f58afc824fb5c47109f7a1bdf0daff/src/main/scala/chatter/crdt/ChatTimeline.scala#L30
-final case class ReplicatedChain(
+import scala.annotation.nowarn
+import akka.cluster.ddata.{ReplicatedData, SelfUniqueAddress}
+
+/*
+https://www.geeksforgeeks.org/merge-two-sorted-arrays/
+https://github.com/haghard/dr-chatter/blob/f60e3174f6f58afc824fb5c47109f7a1bdf0daff/src/main/scala/chatter/crdt/ChatTimeline.scala#L30
+https://github.com/typelevel/algebra/blob/46722cd4aa4b01533bdd01f621c0f697a3b11040/docs/docs/main/tut/typeclasses/overview.md
+ */
+final case class MainChain(
   blockChain: BlockChain,
   //versions: VersionVector[MinerNode] = VersionVector.empty[MinerNode](Implicits.nodeOrdering)
   versions: akka.cluster.ddata.VersionVector //= ManyVersionVector(TreeMap.empty[UniqueAddress, Long])
@@ -18,9 +21,9 @@ final case class ReplicatedChain(
   //akka.cluster.ddata.OneVersionVector(???)
   //akka.cluster.ddata.ManyVersionVector(TreeMap.empty[UniqueAddress, Long])
 
-  override type T = ReplicatedChain
+  override type T = MainChain
 
-  def +(block: Block, node: SelfUniqueAddress /*MinerNode*/ ): ReplicatedChain = {
+  def +(block: Block, node: SelfUniqueAddress /*MinerNode*/ ): MainChain = {
     val (added, updatedChain) = self.blockChain + block
     if (added) copy(updatedChain, self.versions :+ node) else this
   }
@@ -69,7 +72,7 @@ final case class ReplicatedChain(
     Finally, we need idempotency, to ensure that if two machines hold the same data
     in a per-machine ReplicatedChain, merging them will not lead to an incorrect result.
    */
-  override def merge(that: ReplicatedChain): ReplicatedChain =
+  override def merge(that: MainChain): MainChain =
     if (self.versions < that.versions)
       that
     else if (self.versions > that.versions)
@@ -86,6 +89,6 @@ final case class ReplicatedChain(
         else if (self.blockChain.size > that.blockChain.size) this
         else that
 
-      ReplicatedChain(winner.blockChain, versions merge that.versions)
+      MainChain(winner.blockChain, versions merge that.versions)
     } else this //  ==
 }
