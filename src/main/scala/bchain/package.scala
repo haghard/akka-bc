@@ -7,21 +7,6 @@ import scala.math.BigDecimal.RoundingMode
 
 package object bchain {
 
-  /*final case class MinerNode(host: String, port: Int)
-
-  object Implicits {
-    implicit val nodeOrdering = new scala.Ordering[MinerNode] {
-      override def compare(a: MinerNode, b: MinerNode) =
-        Ordering
-          .fromLessThan[MinerNode] { (x, y) ⇒
-            if (x.host != y.host) x.host.compareTo(y.host) < 0
-            else if (x.port != y.port) x.port < y.port
-            else false
-          }
-          .compare(a, b)
-    }
-  }*/
-
   //https://github.com/TeamWanari/scala-coin
   object Difficulty {
     ////BigDecimal(BigDecimal.decimal(math.pow(2, 224)).toBigInt, 16)

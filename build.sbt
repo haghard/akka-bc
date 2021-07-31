@@ -2,7 +2,11 @@ import com.typesafe.sbt.SbtMultiJvm
 import com.typesafe.sbt.SbtMultiJvm.MultiJvmKeys.MultiJvm
 import sbt.CrossVersion
 
-val akkaVersion = "2.6.10"
+val akkaVersion = "2.6.15"
+
+//val Scala212 = "2.12.11"
+val Scala213 = "2.13.6"
+//val scalaVersions = Seq(Scala212, Scala213)
 
 //https://tpolecat.github.io/2017/04/25/scalac-flags.html
 lazy val scalacSettings2_13 = Seq(
@@ -48,13 +52,13 @@ val `akka-bc` = project
   .settings(
     name := "akka-bc",
     version := "0.0.1",
-    scalaVersion := "2.13.3",
+    scalaVersion := "2.13.6",
 
     //These setting is used when
     // Compile / run / fork := true and you run one of the aliases or use runMain,
     //otherwise use
     // sbt -J-Xmx1024M -J-XX:MaxMetaspaceSize=850M -J-XX:+UseG1GC -J-XX:+PrintCommandLineFlags -J-XshowSettings:vm first
-    // or set SBT_OPS
+    // or set .sbtopts
     javaOptions ++= Seq("-Xms512M", "-Xmx700M", "-XX:MaxMetaspaceSize=600M", "-XX:+UseG1GC", "-XX:+PrintCommandLineFlags", "-XshowSettings:vm"),
 
     //javaOptions in Universal ++= Seq("-J-Xms512M", "-J-Xmx700M", "-J-XX:MaxMetaspaceSize=600M"),
@@ -73,38 +77,39 @@ val `akka-bc` = project
       //"com.h2database"  % "h2"          % "1.4.197",
       //"com.h2database"  % "h2-mvstore"  % "1.4.197"
 
-      //transactions search inside a ledger
+      //search inside a ledger
       "com.yandex.yoctodb" % "yoctodb-core"  % "0.0.19",
 
       //https://github.com/typelevel/algebra/blob/46722cd4aa4b01533bdd01f621c0f697a3b11040/docs/docs/main/tut/typeclasses/overview.md
       "org.typelevel" %% "algebra" % "2.1.0",
 
       "org.hdrhistogram"  % "HdrHistogram" %  "2.1.10",
-
-      ("com.lihaoyi" % "ammonite" % "2.3.8" % "test").cross(CrossVersion.full),
+      
+      //("com.lihaoyi" % "ammonite" % "2.3.8-124-2da846d2" % "test").cross(CrossVersion.full),
 
       "com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion),
 
-    //fork in run := true,
+    fork / run := false,
 
     // disable parallel tests
-    parallelExecution in Test := false,
+    Test / parallelExecution := false,
   ) configs MultiJvm
+
 
 scalafmtOnCompile := true
 
 //test:run
+/*
 sourceGenerators in Test += Def.task {
   val file = (sourceManaged in Test).value / "amm.scala"
   IO.write(file, """object amm extends App { ammonite.Main().run() }""")
   Seq(file)
 }.taskValue
+*/
 
 promptTheme := ScalapenosTheme
 
-PB.targets in Compile := Seq(
-  scalapb.gen() -> (sourceManaged in Compile).value
-)
+Compile / PB.targets := Seq(scalapb.gen() -> (Compile / sourceManaged).value)
 
 // (optional) If you need scalapb/scalapb.proto or anything from google/protobuf/*.proto
 libraryDependencies += "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"
