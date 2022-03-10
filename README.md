@@ -4,7 +4,7 @@
 Classic Consensus:
     * Safety - rely on what system tells you.
     * Liveness - progress is guarantee.
-    * Can’t handle byzantine failure ()
+    * Can’t handle byzantine failures
 
 Blockchain 
     * Byzantine failure tolerance (Reach the agreement in a very hostile(untrusted) env.  Keywords: untrustworthy, malicious actors)

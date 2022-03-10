@@ -45,11 +45,11 @@ object ClusterRunner extends App {
           .narrow*/
         //
 
-        //val bs = cats.kernel.BoundedSemilattice[Set[Int]]
-        //cats.kernel.BoundedSemilattice.instance[Int](0, { _ + _ })
+        // val bs = cats.kernel.BoundedSemilattice[Set[Int]]
+        // cats.kernel.BoundedSemilattice.instance[Int](0, { _ + _ })
 
         Behaviors.receiveMessage { case SelfUp(state) ⇒
-          //state.members.mkString(",")
+          // state.members.mkString(",")
           /*ctx.log.warn(
             "Leader {} UP {}",
             state.leader.getOrElse(cluster.selfMember.address),
@@ -103,7 +103,7 @@ object ClusterRunner extends App {
         }
         .narrow*/
         Behaviors.receiveMessage { case SelfUp(state) ⇒
-          //state.members.mkString(",")
+          // state.members.mkString(",")
           ctx.log.warn(
             "Leader {} UP {}",
             state.leader.getOrElse(cluster.selfMember.address),
@@ -135,8 +135,8 @@ object ClusterRunner extends App {
   val isCompleted = new CountDownLatch(1)
   implicit val ec = scala.concurrent.ExecutionContext.global
 
-  //rely on SBR to terminate members
-  node3.terminate() //or Cluster(node1).manager.tell(Leave(Cluster(node3).selfMember.address)) for graceful exit
+  // rely on SBR to terminate members
+  node3.terminate() // or Cluster(node1).manager.tell(Leave(Cluster(node3).selfMember.address)) for graceful exit
   node3.whenTerminated.onComplete { r ⇒
     println(s"Down node3: $r")
     node2.terminate()

@@ -2,10 +2,10 @@ import com.typesafe.sbt.SbtMultiJvm
 import com.typesafe.sbt.SbtMultiJvm.MultiJvmKeys.MultiJvm
 import sbt.CrossVersion
 
-val akkaVersion = "2.6.15"
+val akkaVersion = "2.6.18"
 
 //val Scala212 = "2.12.11"
-val Scala213 = "2.13.6"
+val Scala213 = "2.13.8"
 //val scalaVersions = Seq(Scala212, Scala213)
 
 //https://tpolecat.github.io/2017/04/25/scalac-flags.html
@@ -52,7 +52,7 @@ val `akka-bc` = project
   .settings(
     name := "akka-bc",
     version := "0.0.1",
-    scalaVersion := "2.13.6",
+    scalaVersion := "2.13.8",
 
     //These setting is used when
     // Compile / run / fork := true and you run one of the aliases or use runMain,
@@ -68,24 +68,24 @@ val `akka-bc` = project
       "com.typesafe.akka" %% "akka-distributed-data" % akkaVersion,
 
       "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
-      "ch.qos.logback" % "logback-classic" % "1.2.3",
+      "ch.qos.logback" % "logback-classic" % "1.2.11",
 
-      "io.spray" %%  "spray-json" % "1.3.5",
+      "io.spray" %%  "spray-json" % "1.3.6",
 
       //to store local ReplicatedChain  data
-      "org.rocksdb" % "rocksdbjni" %  "6.10.2",    //Jun, 2020
+      "org.rocksdb" % "rocksdbjni" %  "6.28.2",    //Jun, 2020
       //"com.h2database"  % "h2"          % "1.4.197",
       //"com.h2database"  % "h2-mvstore"  % "1.4.197"
 
       //search inside a ledger
-      "com.yandex.yoctodb" % "yoctodb-core"  % "0.0.19",
+      "com.yandex.yoctodb" % "yoctodb-core"  % "0.0.20",
 
       //https://github.com/typelevel/algebra/blob/46722cd4aa4b01533bdd01f621c0f697a3b11040/docs/docs/main/tut/typeclasses/overview.md
-      "org.typelevel" %% "algebra" % "2.1.0",
+      "org.typelevel" %% "algebra" % "2.7.0",
 
-      "org.hdrhistogram"  % "HdrHistogram" %  "2.1.10",
+      "org.hdrhistogram"  % "HdrHistogram" %  "2.1.12",
       
-      //("com.lihaoyi" % "ammonite" % "2.3.8-124-2da846d2" % "test").cross(CrossVersion.full),
+      ("com.lihaoyi" % "ammonite" % "2.5.2" % "test").cross(CrossVersion.full),
 
       "com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion),
 
@@ -99,13 +99,14 @@ val `akka-bc` = project
 scalafmtOnCompile := true
 
 //test:run
-/*
-sourceGenerators in Test += Def.task {
-  val file = (sourceManaged in Test).value / "amm.scala"
+Test  / sourceGenerators += Def.task {
+  val file = (Test / sourceManaged).value / "amm.scala"
   IO.write(file, """object amm extends App { ammonite.Main().run() }""")
   Seq(file)
 }.taskValue
-*/
+
+addCommandAlias("c", "compile")
+addCommandAlias("r", "reload")
 
 promptTheme := ScalapenosTheme
 

@@ -7,19 +7,19 @@ import scala.math.BigDecimal.RoundingMode
 
 package object bchain {
 
-  //https://github.com/TeamWanari/scala-coin
+  // https://github.com/TeamWanari/scala-coin
   object Difficulty {
-    ////BigDecimal(BigDecimal.decimal(math.pow(2, 224)).toBigInt, 16)
+    //// BigDecimal(BigDecimal.decimal(math.pow(2, 224)).toBigInt, 16)
     val tMax = BigDecimal(BigInt("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16))
 
     def checkHash(hash: String, difficulty: Double): Boolean = {
-      //https://bitcoin.stackexchange.com/a/35807
+      // https://bitcoin.stackexchange.com/a/35807
       val t = (tMax / difficulty).toBigInt
       val h = BigInt(hash, 16)
       h < t
     }
 
-    //https://bitcoin.stackexchange.com/a/35807
+    // https://bitcoin.stackexchange.com/a/35807
     def higherThen(hash: String, limit: BigInt): Boolean = {
       val h = BigInt(hash, 16)
       h > limit
@@ -47,9 +47,9 @@ package object bchain {
       sb.toString
     }
 
-    //Hash String via SHA-256
+    // Hash String via SHA-256
     def sha256Hex(text: String): String = {
-      //digest contains the hashed string and hex contains a hexadecimal ASCII string with left zero padding.
+      // digest contains the hashed string and hex contains a hexadecimal ASCII string with left zero padding.
       val digest =
         new java.math.BigInteger(1, MessageDigest.getInstance("SHA-256").digest(text.getBytes(StandardCharsets.UTF_8)))
       val hex = String.format("%064x", digest)
@@ -73,7 +73,7 @@ package object bchain {
   }
 
   object Block extends DefaultJsonProtocol {
-    //shouldn't return faster then this
+    // shouldn't return faster then this
     val lowestCap = 20_000
 
     implicit val formatter: RootJsonFormat[Block] =
@@ -90,9 +90,9 @@ package object bchain {
       @tailrec def loop(b: Block, stablePrefix: String, startTs: Long, iterNum: Long = 0L): (Block, Long) =
         if (isValid(b, stablePrefix, startTs)) (b, iterNum)
         else {
-          //if (java.util.concurrent.ThreadLocalRandom.current().nextDouble() > 0.99) Thread.sleep(10)
+          // if (java.util.concurrent.ThreadLocalRandom.current().nextDouble() > 0.99) Thread.sleep(10)
 
-          //BigInt(1)
+          // BigInt(1)
           loop(b.copy(nonce = (BigInt(b.nonce, 16) + BigInt(1)).toString(16)), stablePrefix, startTs, iterNum + 1L)
         }
 
@@ -108,7 +108,7 @@ package object bchain {
 
     private def isValid(b: Block, stablePrefix: String, startTs: Long): Boolean =
       b.hash.startsWith(stablePrefix) && ((System
-        .currentTimeMillis() - startTs) > lowestCap) //keep running running it it takes less then `lowestCap`
+        .currentTimeMillis() - startTs) > lowestCap) // keep running running it it takes less then `lowestCap`
   }
 
   final case class BlockChain(chain: List[Block]) {

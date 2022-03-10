@@ -112,13 +112,12 @@ final case class VersionVectors[T: scala.Ordering](entries: SortedMap[T, Long]) 
     */
   def ==(that: VersionVectors[T]): Boolean = compareOnlyTo(that, Same) eq Same
 
-  /** Version vector comparison according to the semantics described by compareTo, with the ability to bail
-    * out early if the we can't reach the Ordering that we are looking for.
+  /** Version vector comparison according to the semantics described by compareTo, with the ability to bail out early if
+    * the we can't reach the Ordering that we are looking for.
     *
-    * The ordering always starts with Same and can then go to Same, Before or After
-    * If we're on After we can only go to After or Concurrent
-    * If we're on Before we can only go to Before or Concurrent
-    * If we go to Concurrent we exit the loop immediately
+    * The ordering always starts with Same and can then go to Same, Before or After If we're on After we can only go to
+    * After or Concurrent If we're on Before we can only go to Before or Concurrent If we go to Concurrent we exit the
+    * loop immediately
     *
     * If you send in the ordering FullOrder, you will get a full comparison.
     */
