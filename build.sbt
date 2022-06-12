@@ -2,7 +2,7 @@ import com.typesafe.sbt.SbtMultiJvm
 import com.typesafe.sbt.SbtMultiJvm.MultiJvmKeys.MultiJvm
 import sbt.CrossVersion
 
-val akkaVersion = "2.6.18"
+val akkaVersion = "2.6.19"
 
 //val Scala212 = "2.12.11"
 val Scala213 = "2.13.8"
@@ -73,7 +73,7 @@ val `akka-bc` = project
       "io.spray" %%  "spray-json" % "1.3.6",
 
       //to store local ReplicatedChain  data
-      "org.rocksdb" % "rocksdbjni" %  "6.28.2",    //Jun, 2020
+      "org.rocksdb" % "rocksdbjni" %  "7.2.2",    //Jun, 2020
       //"com.h2database"  % "h2"          % "1.4.197",
       //"com.h2database"  % "h2-mvstore"  % "1.4.197"
 
@@ -85,7 +85,7 @@ val `akka-bc` = project
 
       "org.hdrhistogram"  % "HdrHistogram" %  "2.1.12",
       
-      ("com.lihaoyi" % "ammonite" % "2.5.2" % "test").cross(CrossVersion.full),
+      ("com.lihaoyi" % "ammonite" % "2.5.4" % "test").cross(CrossVersion.full),
 
       "com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion),
 

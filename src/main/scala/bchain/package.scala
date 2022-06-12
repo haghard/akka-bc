@@ -57,9 +57,9 @@ package object bchain {
     }
   }
 
-  final case class Block(seqNum: Long, prevHash: String, data: JsObject, ts: Long, nonce: String = "1") {
+  final case class Block(seqNum: Long, prevHash: String, data: JsObject, ts: Long, nonce: String = "1") { self ⇒
 
-    def hash: String = Crypto.sha256Hex(toString)
+    def hash: String = Crypto.sha256Hex(self.toString)
 
     s"""
       |$seqNum
@@ -69,7 +69,7 @@ package object bchain {
       |""".stripMargin
 
     override def toString: String =
-      this.toJson.compactPrint
+      self.toJson.compactPrint
   }
 
   object Block extends DefaultJsonProtocol {
@@ -83,7 +83,7 @@ package object bchain {
 
     /*
      * POW
-     * The probability of hash to start with 6 leading zeros: 1/pow(2,6)
+     * The probability of a hash to start with 6 leading zeros: 1/pow(2,6)
      */
     def mine(b: Block, numOfLeadingZero: Int = 6): Block = {
 

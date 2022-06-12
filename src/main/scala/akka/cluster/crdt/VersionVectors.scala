@@ -1,4 +1,4 @@
-package bchain.crdt
+package akka.cluster.crdt
 
 import scala.annotation.tailrec
 import scala.collection.immutable.SortedMap
