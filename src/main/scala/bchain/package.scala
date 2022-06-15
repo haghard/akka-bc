@@ -47,13 +47,12 @@ package object bchain {
       sb.toString
     }
 
-    // Hash String via SHA-256
+    // Hash string via SHA-256
     def sha256Hex(text: String): String = {
       // digest contains the hashed string and hex contains a hexadecimal ASCII string with left zero padding.
       val digest =
         new java.math.BigInteger(1, MessageDigest.getInstance("SHA-256").digest(text.getBytes(StandardCharsets.UTF_8)))
-      val hex = String.format("%064x", digest)
-      hex
+      String.format("%064x", digest)
     }
   }
 
@@ -85,8 +84,7 @@ package object bchain {
      * POW
      * The probability of a hash to start with 6 leading zeros: 1/pow(2,6)
      */
-    def mine(b: Block, numOfLeadingZero: Int = 6): Block = {
-
+    def mine(b: Block, numOfLeadingZero: Int = 4): Block = {
       @tailrec def loop(b: Block, stablePrefix: String, startTs: Long, iterNum: Long = 0L): (Block, Long) =
         if (isValid(b, stablePrefix, startTs)) (b, iterNum)
         else {

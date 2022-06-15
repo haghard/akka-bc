@@ -1,8 +1,5 @@
 package akka.cluster.crdt
 
-//import akka.cluster.UniqueAddress
-//import scala.collection.immutable.TreeMap
-
 import akka.cluster.UniqueAddress
 import akka.actor.AddressFromURIString
 
@@ -11,16 +8,14 @@ import akka.cluster.ddata.{RemovedNodePruning, ReplicatedData, ReplicatedDataSer
 import akka.util.HashCode
 import bchain.{Block, BlockChain}
 
-/*
-https://www.geeksforgeeks.org/merge-two-sorted-arrays/
-https://github.com/haghard/dr-chatter/blob/f60e3174f6f58afc824fb5c47109f7a1bdf0daff/src/main/scala/chatter/crdt/ChatTimeline.scala#L30
-https://github.com/typelevel/algebra/blob/46722cd4aa4b01533bdd01f621c0f697a3b11040/docs/docs/main/tut/typeclasses/overview.md
- */
-
+/** https://www.geeksforgeeks.org/merge-two-sorted-arrays/
+  * https://github.com/haghard/dr-chatter/blob/f60e3174f6f58afc824fb5c47109f7a1bdf0daff/src/main/scala/chatter/crdt/ChatTimeline.scala#L30
+  * https://github.com/typelevel/algebra/blob/46722cd4aa4b01533bdd01f621c0f697a3b11040/docs/docs/main/tut/typeclasses/overview.md
+  */
 object ReplicatedBChain {
   private val Sep = "_"
 
-  def name(node: UniqueAddress): String =
+  def toStr(node: UniqueAddress): String =
     s"${node.address}$Sep${node.longUid}"
 
   def fromStr(s: String): UniqueAddress = {
@@ -42,9 +37,9 @@ final case class ReplicatedBChain private (
 
   override type T = ReplicatedBChain
 
-  def +(block: Block, node: UniqueAddress): ReplicatedBChain = {
+  def :+(block: Block, node: UniqueAddress): ReplicatedBChain = {
     val (added, updatedChain) = self.blockChain + block
-    if (added) self.copy(updatedChain, self.clock.:+(ReplicatedBChain.name(node)))
+    if (added) self.copy(updatedChain, self.clock.:+(ReplicatedBChain.toStr(node)))
     else self
   }
 
@@ -128,13 +123,13 @@ final case class ReplicatedBChain private (
     clock.versions.keySet.map(ReplicatedBChain.fromStr)
 
   override def needPruningFrom(removedNode: UniqueAddress): Boolean =
-    clock.versions.contains(ReplicatedBChain.name(removedNode))
+    clock.versions.contains(ReplicatedBChain.toStr(removedNode))
 
   override def prune(removedNode: UniqueAddress, collapseInto: UniqueAddress): ReplicatedBChain = {
-    val rm = ReplicatedBChain.name(removedNode)
+    val rm = ReplicatedBChain.toStr(removedNode)
     self.clock.versions.get(rm) match {
       case Some(v) ⇒
-        val c            = ReplicatedBChain.name(collapseInto)
+        val c            = ReplicatedBChain.toStr(collapseInto)
         val vv           = self.clock.versions.get(c).getOrElse(0L) + v
         val updatedClock = akka.cluster.VectorClock(self.clock.versions.removed(rm) + (c → vv))
         self.copy(clock = updatedClock)
@@ -144,7 +139,7 @@ final case class ReplicatedBChain private (
   }
 
   override def pruningCleanup(removedNode: UniqueAddress): ReplicatedBChain = {
-    val updatedClock = akka.cluster.VectorClock(self.clock.versions.removed(ReplicatedBChain.name(removedNode)))
+    val updatedClock = akka.cluster.VectorClock(self.clock.versions.removed(ReplicatedBChain.toStr(removedNode)))
     self.copy(clock = updatedClock)
   }
 }

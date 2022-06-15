@@ -81,10 +81,14 @@ val `akka-bc` = project
       "com.yandex.yoctodb" % "yoctodb-core"  % "0.0.20",
 
       //https://github.com/typelevel/algebra/blob/46722cd4aa4b01533bdd01f621c0f697a3b11040/docs/docs/main/tut/typeclasses/overview.md
-      "org.typelevel" %% "algebra" % "2.7.0",
+      //"org.typelevel" %% "algebra" % "2.7.0",
 
       "org.hdrhistogram"  % "HdrHistogram" %  "2.1.12",
-      
+
+      //JsonValueCodecJsValue
+      //PlayJsonJsoniter.serialize()
+      "com.evolutiongaming" %% "play-json-jsoniter" % "0.10.0",
+
       ("com.lihaoyi" % "ammonite" % "2.5.4" % "test").cross(CrossVersion.full),
 
       "com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion),
