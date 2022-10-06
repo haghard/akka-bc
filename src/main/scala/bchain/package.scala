@@ -41,24 +41,45 @@ package object bchain {
         .toString()
 
     def bytesToHex(bytes: Array[Byte]): String = {
-      val sb = new StringBuilder()
+      val hexString = new StringBuilder(2 * bytes.length)
       for (b ← bytes)
-        sb.append(String.format("%02X ", b: java.lang.Byte))
-      sb.toString
+        hexString.append(String.format("%02X ", b: java.lang.Byte))
+
+      hexString.toString
+    }
+
+    def bytesToHex2(bytes: Array[Byte]): String = {
+      val hexString = new StringBuilder(2 * bytes.length)
+      for (b ← bytes) {
+        val hex = Integer.toHexString(0xff & b)
+        if (hex.length() == 1) {
+          hexString.append('0')
+        }
+        hexString.append(hex)
+      }
+      hexString.toString
     }
 
     // Hash string via SHA-256
     def sha256Hex(text: String): String = {
       // digest contains the hashed string and hex contains a hexadecimal ASCII string with left zero padding.
-      val digest =
-        new java.math.BigInteger(1, MessageDigest.getInstance("SHA-256").digest(text.getBytes(StandardCharsets.UTF_8)))
-      String.format("%064x", digest)
+      val bts = MessageDigest.getInstance("SHA-256").digest(text.getBytes(StandardCharsets.UTF_8))
+      // println(bts.size) 32
+      String.format("%064x", new java.math.BigInteger(1, bts))
     }
+
+    // https://www.baeldung.com/sha-256-hashing-java
+    def sha3_256Hex(text: String): String = {
+      val bts = MessageDigest.getInstance("SHA3-256").digest(text.getBytes(StandardCharsets.UTF_8))
+      String.format("%064x", new java.math.BigInteger(1, bts))
+    }
+
+    // java.util.Arrays.compare()
   }
 
   final case class Block(seqNum: Long, prevHash: String, data: JsObject, ts: Long, nonce: String = "1") { self ⇒
 
-    def hash: String = Crypto.sha256Hex(self.toString)
+    def hash: String = Crypto.sha3_256Hex(self.toString)
 
     s"""
       |$seqNum
@@ -89,15 +110,12 @@ package object bchain {
         if (isValid(b, stablePrefix, startTs)) (b, iterNum)
         else {
           // if (java.util.concurrent.ThreadLocalRandom.current().nextDouble() > 0.99) Thread.sleep(10)
-
-          // BigInt(1)
           loop(b.copy(nonce = (BigInt(b.nonce, 16) + BigInt(1)).toString(16)), stablePrefix, startTs, iterNum + 1L)
         }
 
       val expectedPrefix = "0" * numOfLeadingZero
-
-      val startTs       = System.currentTimeMillis()
-      val (block, iter) = loop(b, expectedPrefix, startTs)
+      val startTs        = System.currentTimeMillis()
+      val (block, iter)  = loop(b, expectedPrefix, startTs)
 
       import scala.Console.{GREEN, RESET /*, RED*/}
       println(s"$GREEN [latency: ${(System.currentTimeMillis - startTs) / 1_000} sec, cycles: $iter]$RESET")

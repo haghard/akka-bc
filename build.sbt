@@ -2,10 +2,10 @@ import com.typesafe.sbt.SbtMultiJvm
 import com.typesafe.sbt.SbtMultiJvm.MultiJvmKeys.MultiJvm
 import sbt.CrossVersion
 
-val akkaVersion = "2.6.19"
+val akkaVersion = "2.6.20"
 
 //val Scala212 = "2.12.11"
-val Scala213 = "2.13.8"
+val Scala213 = "2.13.9"
 //val scalaVersions = Seq(Scala212, Scala213)
 
 //https://tpolecat.github.io/2017/04/25/scalac-flags.html
@@ -68,12 +68,12 @@ val `akka-bc` = project
       "com.typesafe.akka" %% "akka-distributed-data" % akkaVersion,
 
       "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
-      "ch.qos.logback" % "logback-classic" % "1.2.11",
+      "ch.qos.logback" % "logback-classic" % "1.4.3",
 
       "io.spray" %%  "spray-json" % "1.3.6",
 
       //to store local ReplicatedChain  data
-      "org.rocksdb" % "rocksdbjni" %  "7.2.2",    //Jun, 2020
+      "org.rocksdb" % "rocksdbjni" %  "7.6.0",    //Jun, 2020
       //"com.h2database"  % "h2"          % "1.4.197",
       //"com.h2database"  % "h2-mvstore"  % "1.4.197"
 
